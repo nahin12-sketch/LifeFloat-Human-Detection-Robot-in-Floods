@@ -76,6 +76,7 @@ b.	The system continues scanning the environment without interruption.
 9.	Movement Mechanism: The DC motors are used to move the robot across the water surface. These motors are mounted on the floating base for propulsion.
 10.	Motor Control: The L298N motor driver module controls the speed and direction of the DC motors based on signals received from the Arduino.
 
+
 4. Challenges Faced
 
      4.1 Problems Encountered
