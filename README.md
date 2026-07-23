@@ -77,7 +77,7 @@ b.	The system continues scanning the environment without interruption.
 10.	Motor Control: The L298N motor driver module controls the speed and direction of the DC motors based on signals received from the Arduino.
 
 
- 4. Challenges Faced
+ Challenges Faced
 
      4.1 Problems Encountered
 
