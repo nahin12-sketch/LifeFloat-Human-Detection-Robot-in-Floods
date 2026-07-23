@@ -76,6 +76,32 @@ b.	The system continues scanning the environment without interruption.
 9.	Movement Mechanism: The DC motors are used to move the robot across the water surface. These motors are mounted on the floating base for propulsion.
 10.	Motor Control: The L298N motor driver module controls the speed and direction of the DC motors based on signals received from the Arduino.
 
+4. Challenges Faced
+
+     4.1 Problems Encountered
+
+•	Difficulty in designing a stable floating structure.
+•	Sensors giving inaccurate readings in outdoor conditions.
+•	Power supply issues and battery drainage.
+•	Complex wiring connections.
+•	Water protection for electronic components.
+•	Motor control and balancing movement.
+•	Arduino was not supporting the code.
+•	Did not have a kind of jumper wires and tools like screw driver, tester.
+•	Managing time and team members.
+
+
+     4.2 Solutions
+
+•	Used lightweight and waterproof materials for floating base.
+•	Calibrated sensors properly for better accuracy.
+•	Used a stable Li-ion battery system.
+•	Organized wiring carefully using breadboard.
+•	Protected components using insulation and casing.
+•	Tested motor control multiple times to ensure smooth movement.
+•	Some parts of Arduino were opened and checked the problem, then solved it.
+•	Used the type of wire we had by DIYing it.
+•	Had a communication and discussed the urgency and by staying calm.
 
 
 
