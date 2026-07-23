@@ -1,0 +1,158 @@
+const int ENA = 5;
+const int IN1 = 2;
+const int IN2 = 3;
+const int IN3 = 4;
+const int IN4 = 7;
+const int ENB = 6;
+
+const int trigPin = 8;
+const int echoPin = 9;
+
+const int pirPin = 10;
+const int buzzerPin = 11;
+const int redLedPin = 12;
+
+long duration;
+int distance;
+
+bool turnRightNext = true;
+
+bool alarmActive = false;
+unsigned long alarmStartTime = 0;
+unsigned long previousBlinkTime = 0;
+bool ledState = false;
+
+const int obstacleDistance = 25;
+const int maxSpeed = 255;
+
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(pirPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(redLedPin, OUTPUT);
+
+  digitalWrite(buzzerPin, LOW);
+  digitalWrite(redLedPin, LOW);
+
+  Serial.begin(9600);
+
+  moveForward();
+}
+
+void loop() {
+  checkPIR();
+  handleAlarm();
+
+  distance = getDistance();
+
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  if (distance > 0 && distance <= obstacleDistance) {
+    if (turnRightNext) {
+      turnRight();
+      delay(500);   
+      turnRightNext = false;
+    } else {
+      turnLeft();
+      delay(500);  
+      turnRightNext = true;
+    }
+  } else {
+    moveForward();  
+  }
+}
+
+int getDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH, 30000);
+
+  if (duration == 0) return -1;
+
+  return duration * 0.034 / 2;
+}
+
+void moveForward() {
+  analogWrite(ENA, maxSpeed);
+  analogWrite(ENB, maxSpeed);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void turnRight() {
+  analogWrite(ENA, maxSpeed);
+  analogWrite(ENB, maxSpeed);
+
+  // left motor forward
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  // right motor reverse
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void turnLeft() {
+  analogWrite(ENA, maxSpeed);
+  analogWrite(ENB, maxSpeed);
+
+  // left motor reverse
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+
+  // right motor forward
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void checkPIR() {
+  int pirState = digitalRead(pirPin);
+
+  if (pirState == HIGH && !alarmActive) {
+    alarmActive = true;
+    alarmStartTime = millis();
+    previousBlinkTime = millis();
+    digitalWrite(buzzerPin, HIGH);
+  }
+}
+
+void handleAlarm() {
+  if (alarmActive) {
+    unsigned long currentTime = millis();
+
+    if (currentTime - previousBlinkTime >= 300) {
+      previousBlinkTime = currentTime;
+      ledState = !ledState;
+      digitalWrite(redLedPin, ledState);
+    }
+
+    if (currentTime - alarmStartTime >= 10000) {
+      alarmActive = false;
+      digitalWrite(buzzerPin, LOW);
+      digitalWrite(redLedPin, LOW);
+      ledState = false;
+    }
+  }
+}
+
+
+
